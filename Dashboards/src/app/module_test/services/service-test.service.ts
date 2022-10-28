@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -16,8 +16,11 @@ export class ServiceTestService {
   }
 
   postRest(url: string, body:JSON): Observable<Response>{
-    let headers = new HttpHeaders;
-    headers = headers.set('Content-Type', 'application/json; charset=utf-8;Access-Control-Allow-Origin=*');
-    return this.http.post<Response>(url,body,{headers});
+    //let headers = new HttpHeaders;
+    //headers = headers.set('Content-Type', 'application/json').set('mode','no-cors') ;
+    return this.http.post<Response>(url,body);
+  }
+  post(url:string, raw:any){
+    return this.http.post(url,raw);
   }
 }

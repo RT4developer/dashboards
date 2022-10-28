@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { Component, OnInit ,Input} from '@angular/core';
+import { ColumnMode, columnsByPin } from '@swimlane/ngx-datatable';
+import { ServiceTestService } from '../../services/service-test.service';
 
 
 @Component({
@@ -8,7 +9,7 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
   styleUrls: ['./component-test.component.css']
 })
 export class ComponentTestComponent implements OnInit {
-
+  @Input() url: any;
   rows:any;
   expanded = {};
   timeout: any;
@@ -21,11 +22,11 @@ export class ComponentTestComponent implements OnInit {
 
 
 
-  constructor() {
-    this.fetch((data: any) => {
-      this.rows = data;
-    });
+  constructor(private service:ServiceTestService) {
+
+    this.testTable();
   }
+
 
   onPage(event: any) {
     clearTimeout(this.timeout);
@@ -34,25 +35,16 @@ export class ComponentTestComponent implements OnInit {
     }, 100);
   }
 
-  fetch(cb: { (data: any): void; (arg0: any): void; }) {
-    const req = new XMLHttpRequest();
-    req.open('GET', `https://aadskepler.rt4.cloud:8481/WS_ejemplo/api/estatusagente/5101`);
 
-    req.onload = () => {
-      const rows = JSON.parse(req.response);
-
-      for (const row of rows) {
-        row.height = Math.floor(Math.random() * 80) + 50;
-      }
-
-      cb(rows);
-    };
-
-    req.send();
-  }
 
   getRowHeight(row: { height: any; }) {
     return row.height;
+  }
+
+  public testTable(){
+    this.service.getRest('https://aadskepler.rt4.cloud:8481/WS_ejemplo/api/estatusagente/5101').subscribe(data => {
+      this.rows = data;
+    })
   }
 
 }
